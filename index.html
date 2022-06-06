@@ -26,7 +26,7 @@
   <body class="antialiased text-gray-700 bg-gray-100">
     <div id="app" class="flex w-full h-screen  bg-gray-100 justify-center items-center">
       <div class="w-full  max-w-xl p-3">
-        <h1 class="font-bold text-2xl text-center ">
+        <h1 class="font-bold text-3xl text-center ">
           WHATFIX QUIZ
         </h1>
         
@@ -35,7 +35,7 @@
           
 
           <div v-if="idx < count">
-            <p class="text-xl font-bold">{{questions[idx]['question']}}</p>
+            <p class="text-2xl font-bold">{{questions[idx]['question']}}</p>
             <label
               v-for="(answer, index) in questions[idx].answers"
               :key="index"
