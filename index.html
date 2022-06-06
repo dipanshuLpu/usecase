@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
+      integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+        footer {
+            margin: 0 0 2rem;
+        }
+        i.fab:hover {
+            opacity: 0.9;
+        }
+    </style>
+    <title>COGNIZANT QUIZ</title>
+  </head>
+  
+  <body class="antialiased text-gray-700 bg-gray-100">
+    <div id="app" class="flex w-full h-screen  bg-gray-100 justify-center items-center">
+      <div class="w-full  max-w-xl p-3">
+        <h1 class="font-bold text-3xl text-center ">
+          WHATFIX QUIZ
+        </h1>
+        
+   
+        <div class="bg-white p-12 rounded-lg shadow-lg w-full mt-8">
+          
+
+          <div v-if="idx < count">
+            <p class="text-2xl font-bold">{{questions[idx]['question']}}</p>
+            <label
+              v-for="(answer, index) in questions[idx].answers"
+              :key="index"
+              :for="index"
+              class="block mt-4 border border-gray-300 rounded-lg py-2 px-6 text-lg"
+              :class="{'hover:bg-gray-100 cursor-pointer' : selectedAnswer == ''}, {'bg-green-200' : index == questions[idx].correctAnswer && selectedAnswer != ''}, {'bg-red-200' : selectedAnswer == index}"
+            >
+              <input
+                :id="index"
+                type="radio"
+                class="hidden"
+                :value="index"
+                @change="answered($event)"
+                :disabled="selectedAnswer != ''"
+              />
+              {{answer}}
+            </label>
+            <div class="mt-6 flow-root">
+              <button
+                @click="nextQuestion"
+                v-show="selectedAnswer != '' && idx < count - 1"
+                class="nextbtn float-right  text-white text-sm font-bold tracking-wide rounded-full px-5 py-2"
+              >
+                Next &gt;
+              </button>
+              <button
+                @click="showResults"
+                v-show="selectedAnswer != '' && idx == count - 1"
+                class="nextbtn float-right  text-white text-sm font-bold tracking-wide rounded-full px-5 py-2"
+              >
+                Finish
+              </button>
+            </div>
+          </div>
+          <div v-else>
+            <h2 class="text-bold text-3xl">Results</h2>
+            <div class="flex justify-start space-x-4 mt-6">
+              <p>
+                Correct Answers:
+                <span class="text-2xl text-green-700 font-bold"
+                  >{{correctAnswers}}</span
+                >
+              </p>
+              <p>
+                Wrong Answers:
+                <span class="text-2xl text-red-700 font-bold"
+                  >{{wrongAnswers}}</span
+                >
+              </p>
+            </div>
+            <div class="mt-6 flow-root">
+              <button
+                @click="resetQuiz"
+                class="nextbtn float-right text-white text-sm font-bold tracking-wide rounded-full px-5 py-2"
+              >
+                Take Quiz Again
+              </button>
+            </div>
+
+            
+          </div>
+          <div class="div-1 ">
+    <div class="w-2  px-4 object-center	 py-4">
+      <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTE5IiBoZWlnaHQ9IjMyIiB2aWV3Qm94PSIwIDAgMTE5IDMyIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8ZyBjbGlwLXBhdGg9InVybCgjY2xpcDBfMzUxOjc0MzIpIj4KPHBhdGggZD0iTTI5LjQzNDkgMEwxOS42OTIzIDIyLjIwNTNIMTkuNTI5OEwxOC40OTY3IDEzLjAyMDFMMTMuMzk4OSAyNC4zNjk5TDEzLjc1ODcgMjcuMDI3MkgyNC4wNjY0TDM2LjIwNTUgMEgyOS40MzQ5WiIgZmlsbD0iI0Y1NTgwMCIvPgo8cGF0aCBkPSJNMTguNDk1NSAxMy4wMjAxSDE4LjQ5NjdMMjQuMzQ0MSAwLjAwMTA5ODYzSDE3LjU3MzVMNy44MzA4NyAyMi4yMDY0SDcuNjY4MzNMNi42MDc0OCAxMy4wMjEySDBMMS44OTcyNyAyNy4wMjgzSDEyLjIwNUwxMy4zOTg5IDI0LjM2OTlMMTEuODYxNCAxMy4wMjAxSDE4LjQ5NTVaIiBmaWxsPSIjRkZBNDUwIi8+CjxwYXRoIGQ9Ik0xOC40OTY2IDEzLjAyMDNIMTEuODYxM0wxMy4zOTg4IDI0LjM3MDFMMTguNDc0IDEzLjA2OTdMMTguNDk2NiAxMy4wMjAzWiIgZmlsbD0iI0M2M0QyMiIvPgo8cGF0aCBkPSJNNDUuMDY5MSAxMy4wMjYzTDM4LjM0NjUgMjcuMDMzOUgzNC4yNTIzTDMzLjQxMTggMTguNDEyTDI5LjUzNjMgMjcuMDMzOUgyNS42MzM2TDIzLjczNjMgMTMuMDI2M0gyNy40MjI3TDI4LjQyNTEgMjIuMjEwMkgyOC41ODc3TDMyLjU5OTcgMTMuMDI0NUgzNi4xNzc5TDM3LjAxODQgMjIuMjEwMkgzNy4xODA5TDQxLjI3NDUgMTMuMDI0NUw0NS4wNjkxIDEzLjAyNjNaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNNDYuODg1NCA3LjMxNThINTAuNjc5OUw0OS4zNzkgMTQuNTYxNkM1MC40MzU4IDEzLjM3NjQgNTEuODk5OCAxMi43NTY4IDUzLjYwNzkgMTIuNzU2OEM1Ni4yOTEzIDEyLjc1NjggNTguMTM0OCAxNC4yOTI2IDU4LjEzNDggMTYuOTU5QzU4LjEzNDggMTcuNzY3MiA1Ny45NzIyIDE4LjczNjkgNTcuODA5NyAxOS41OTlMNTYuNDUzOCAyNy4wMzM5SDUyLjc0MDNMNTQuMDQxOCAxOS42ODEyQzU0LjEyMzMgMTkuMTk2MSA1NC4yNTg3IDE4LjYzMDUgNTQuMjU4NyAxOC4wMTA5QzU0LjI1ODcgMTYuODI1NyA1My43OTU5IDE1Ljc3NSA1Mi4wOTAxIDE1Ljc3NUM1MC4xNjU3IDE1Ljc3NSA0OC45NDU3IDE3LjA5NyA0OC42MTk1IDE4LjkyNjVMNDcuMTgyNyAyNy4wMzUxSDQzLjM5MTZMNDYuODg1NCA3LjMxNThaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNNjguOTM3NiAyNy4wMzQyTDY5LjE4MDYgMjUuNjkyNkM2OC40MjQ2IDI2LjcyMjEgNjYuODc3OCAyNy4zMDIgNjUuMDg4NyAyNy4zMDJDNjEuMTMwNSAyNy4zMDIgNTguNjY0MSAyNC40NzM1IDU4LjY2NDEgMjAuNTEzOEM1OC42NjQxIDE2LjE0OTkgNjEuNzAwMyAxMi43NTQxIDY2LjI4MTUgMTIuNzU0MUM2OC44ODQ0IDEyLjc1NDEgNzAuMjkzNSAxMy44NTg4IDcxLjAyNDYgMTUuMTI1MUw3MS40MDE4IDEzLjAyMzdINzQuNzY1NEw3Mi44MTM3IDI0LjAxNDJMNzIuMzE2MyAyNy4wMzEzTDY4LjkzNzYgMjcuMDM0MlpNNzAuMjkzNSAxOS41NzIyQzcwLjI5MzUgMTcuMzYzMyA2OS4wMjA5IDE1LjY5MzYgNjYuNTc5NCAxNS42OTM2QzYzLjYyNDcgMTUuNjkzNiA2Mi4zMjMyIDE4LjExNzUgNjIuMzIzMiAyMC40NjQzQzYyLjMyMzIgMjIuODM0OCA2My42NzkxIDI0LjM3IDY1Ljk1NTggMjQuMzdDNjguODAyMyAyNC4zNjcxIDcwLjI5MzUgMjEuOTY5NyA3MC4yOTM1IDE5LjU3MjJaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNODEuNzg2MyA4Ljk4NTQ2TDgxLjA1NDYgMTMuMDI2Mkg4NC42ODcyTDg0LjIyNDQgMTUuNzczN0g4MC41OTE5TDc5LjM3MTkgMjIuNjk2NUM3OS4xODIyIDIzLjc3NDIgNzkuNDUzNSAyNC40NDc5IDgwLjYxOSAyNC40NDc5QzgxLjE2MSAyNC40NDc5IDgyLjA3MTUgMjQuMjY2MiA4Mi42OTUxIDI0LjA1MDdMODIuMjI4MyAyNi43MTI1QzgxLjcxMjkgMjYuOTU1MSA4MC45NDQ3IDI3LjMwMjggNzkuMTU1NiAyNy4zMDI4Qzc1LjYzMTIgMjcuMzAyOCA3NS4yMjIyIDI1LjAxMzUgNzUuNzEyOCAyMi4yMzlMNzYuODUyOCAxNS43NzI2SDc0Ljg3NEw3NS4zOTQ2IDEzLjAyNTFINzcuMzY1M0w3OC42OTU3IDguOTg0MzFMODEuNzg2MyA4Ljk4NTQ2WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTEwMC43NTEgMTMuMDI2Nkw5OC4yNTcxIDI3LjAzNDJIOTQuNTQzTDk2LjUyMDYgMTUuODA1MUw5NC44NDk1IDE1Ljc2NzdMOTUuMzU2MyAxMy4wMjY2SDEwMC43NTFaTTk4Ljk4ODggNy4wNDg3NUM5OS4zOTYzIDcuMDQ4NzUgOTkuNzk0NyA3LjE2ODgyIDEwMC4xMzQgNy4zOTM3OUMxMDAuNDcyIDcuNjE4NzcgMTAwLjczNiA3LjkzODUzIDEwMC44OTIgOC4zMTI2NEMxMDEuMDQ4IDguNjg2NzUgMTAxLjA4OSA5LjA5ODQyIDEwMS4wMSA5LjQ5NTU4QzEwMC45MyA5Ljg5MjczIDEwMC43MzQgMTAuMjU3NSAxMDAuNDQ2IDEwLjU0MzlDMTAwLjE1OCAxMC44MzAyIDk5Ljc5MDUgMTEuMDI1MiA5OS4zOTA4IDExLjEwNDJDOTguOTkxMSAxMS4xODMyIDk4LjU3NjggMTEuMTQyNyA5OC4yMDAzIDEwLjk4NzdDOTcuODIzOSAxMC44MzI3IDk3LjUwMjEgMTAuNTcwMyA5Ny4yNzU3IDEwLjIzMzZDOTcuMDQ5MyA5Ljg5NjkzIDk2LjkyODQgOS41MDEwOSA5Ni45Mjg0IDkuMDk2MTVDOTYuOTI4MSA4LjgyNzA3IDk2Ljk4MTEgOC41NjA1NSA5Ny4wODQ1IDguMzExODRDOTcuMTg3OCA4LjA2MzE0IDk3LjMzOTYgNy44MzcxNCA5Ny41MzA5IDcuNjQ2NzZDOTcuNzIyMyA3LjQ1NjM5IDk3Ljk0OTYgNy4zMDUzNyA5OC4xOTk3IDcuMjAyMzZDOTguNDQ5OSA3LjA5OTM2IDk4LjcxOCA3LjA0NjM3IDk4Ljk4ODggNy4wNDY0NVY3LjA0ODc1WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTEwNS41MjIgMTkuNzg3NUwxMDEuODM1IDEzLjAyNjJIMTA1Ljg3NUwxMDguMDE1IDE3LjMzNzJMMTExLjI2OCAxMy4wMjYySDExNS42ODZMMTA5Ljc3OCAyMC4wNTcxTDExMy40MTEgMjcuMDMzOUgxMDkuNDUzTDEwNy4yMyAyMi40ODE1TDEwMy43NTkgMjcuMDMzOUg5OS4zMTM1TDEwNS41MjIgMTkuNzg3NVoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik04NC4xMzExIDI4Ljc4NUM4NS4yMTUxIDI4LjY1MDUgODUuNTY3OSAyOC4wMzA5IDg1LjczMDUgMjcuMTY4N0w4Ny43MDkzIDE1Ljc3M0g4NS41NDA4TDg1LjkyMDIgMTMuMDI1NUg4OC4yMjQxTDg4LjQ0MSAxMS43ODYyQzg4Ljg0NTkgOS42MDIwMSA4OS43OTYzIDcuMDQ1MzUgOTMuMjkzNSA3LjA0NTM1Qzk0LjA0ODUgNy4wNDgwOCA5NC44MDAxIDcuMTQ0NjMgOTUuNTMwOSA3LjMzMjc0TDk1LjA3NCA5Ljk0ODYxQzk0LjU5MzMgOS44OTExMyA5NC4zNzk4IDkuODQ5MTcgOTMuOTE3MSA5Ljg0OTE3QzkyLjUzNDYgOS44NDkxNyA5Mi4zNzIxIDEwLjYwMzMgOTIuMTgxOCAxMS42MjdMOTEuOTM4MyAxMy4wMjc4SDk0LjUxMzVMOTQuMDI1MyAxNS43NzUzSDkxLjQ1MDFMODkuMzg5NyAyNy4yNzc0Qzg4Ljg3NDkgMzAuMjE0IDg3LjgyNzkgMzEuODc1NyA4My42MTU3IDMxLjYzOTRMODQuMTMxMSAyOC43ODVaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMTE3LjUwMiAxMy4wNTFWMTMuNDMzM0gxMTcuMDcyVjE0LjM0MjZIMTE2LjY2OFYxMy40MzMzSDExNi4yNVYxMy4wNTFIMTE3LjUwMlpNMTE5IDEzLjA1MVYxNC4zNDI2SDExOC42MTZWMTQuMTE3M0wxMTguNjMyIDEzLjgwMzRMMTE4LjQzNCAxNC4yODYySDExOC4xNThMMTE3Ljk2IDEzLjgwMzRMMTE3Ljk3NiAxNC4xMTczVjE0LjM0MjZIMTE3LjU5MVYxMy4wNTFIMTE3Ljk3MkwxMTguMjk2IDEzLjg1OTdMMTE4LjYyIDEzLjA1MUgxMTlaIiBmaWxsPSIjMjUyMjNCIi8+CjwvZz4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfMzUxOjc0MzIiPgo8cmVjdCB3aWR0aD0iMTE5IiBoZWlnaHQ9IjMxLjY2MDYiIGZpbGw9IndoaXRlIi8+CjwvY2xpcFBhdGg+CjwvZGVmcz4KPC9zdmc+" alt="..." class="align-middle object-center border-none" />
+    </div>
+  </div>
+        </div>
+        
+      </div>
+      
+    </div>
+    
+    
+    <footer class="text-center">
+      <a
+        target="_blank"
+        title="Viewing existing code on GitHub. Simple Quiz App using Vue 3 and Tailwind CSS"
+        >    
+      </i></a
+      ><br />
+      <small id="year"></small>
+    </footer>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="./main.js"></script>
+    
+  </body>
+  
+</html>
