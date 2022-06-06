@@ -9,18 +9,18 @@ const app = Vue.createApp({
       questions: [
         {
           question:
-            "Q1",
-          answers: { a: "a", b: "b", c: "c", d: "d" },
-          correctAnswer: "b",
+            "Final Estimation Proposals will be attached to the original Quotation",
+          answers: { a: "Task", b: "Contact", c: "Dashboard", d: "Account" },
+          correctAnswer: "a",
         },
         {
-          question: "Q2",
-          answers: { a: "a", b: "b", c: "c", d: "d" },
+          question: "Net Sales and Order Entry Information is found on the ______ in Salesforce.",
+          answers: { a: "Customer Service Dashboard", b: "SAP Customer", c: "Sales Funnel Dashboard", d: "All of above" },
           correctAnswer: "d",
         },
         {
           question:
-            "Q3",
+            "The sales force can play a central role in achieving a marketing orientation strategy, by Collecting and disseminating market information",
           answers: { a: "True", b: "False" },
           correctAnswer: "b",
         },
