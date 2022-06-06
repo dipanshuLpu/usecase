@@ -35,7 +35,7 @@
           
 
           <div v-if="idx < count">
-            <p class="text-2xl font-bold">{{questions[idx]['question']}}</p>
+            <p class="text-xl font-bold">{{questions[idx]['question']}}</p>
             <label
               v-for="(answer, index) in questions[idx].answers"
               :key="index"
